@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) throws ClassNotFoundException {
         JDBC jdbc = new JDBC();
 
-//        jdbc.jdbc_read_data();
+        jdbc.jdbc_read_data();
 
         /*System.out.println("Enter name: >>> ");
         Scanner inp = new Scanner(System.in);
