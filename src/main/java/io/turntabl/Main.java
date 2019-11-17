@@ -4,17 +4,17 @@ public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException {
         JDBC jdbc = new JDBC();
-
         jdbc.readCustomerData();
 
         /*System.out.println("Enter name: >>> ");
         Scanner inp = new Scanner(System.in);
         String name = inp.nextLine();
         jdbc.searchCustomerName(name);*/
-
 //        jdbc.searchCategoryByName("Beverages");
-//        jdbc.searchCategoryByName();
+//        jdbc.searchCategoryByName(name);
 
+
+//        dao
         ProductDAOImpl productDAO = new ProductDAOImpl();
 //        productDAO.showAllProductsByCustomer("Karin Josephs");
 //        for (ProductTO prod : productDAO.showAllProductsByCustomer("Karin Josephs")) {
