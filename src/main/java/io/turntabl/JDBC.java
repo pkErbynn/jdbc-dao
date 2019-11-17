@@ -1,12 +1,15 @@
 package io.turntabl;
 
+/* jdbc without dao
+* */
+
 import org.graalvm.compiler.debug.CSVUtil;
 
 import java.sql.*;
 
 public class JDBC {
 
-    public static void jdbc_read_data() throws ClassNotFoundException {
+    public static void readCustomerData() throws ClassNotFoundException {
         // load the JDBC driver from prostgresql
         Class.forName("org.postgresql.Driver");
 
@@ -39,12 +42,11 @@ public class JDBC {
                 );
                 System.out.println();
             }
-
         } catch (SQLException sqle) {
             System.err.println("Connection error: " + sqle);
         }
-
     }
+
 
     public static void searchCustomerName(String name) throws ClassNotFoundException {
         // load the JDBC driver from prostgresql
@@ -60,6 +62,7 @@ public class JDBC {
 
             // statement execution with cursor
             ResultSet rs = s.executeQuery("select * from customers where contact_name ='" + name +"'; ");
+//            ResultSet rs = s.executeQuery("select * from customers where contact_name like '%"+name+"%';");
 
             // headings
             System.out.println("*****************************************************************************************************************************************");
@@ -109,7 +112,6 @@ public class JDBC {
                 );
                 System.out.println();
             }
-
         } catch (SQLException sqle) {
             System.err.println("Connection error: " + sqle);
         }
@@ -117,7 +119,57 @@ public class JDBC {
 
     // TODO: create prepared statement for Product and Employee name searches
 
+    public static void searchByProductName(String name) throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        String dbUrl = "jdbc:postgresql:northwind";
+        try (Connection db = DriverManager.getConnection(dbUrl, "john-erbynn", "turntabl")) {
+            PreparedStatement preparedStatement = db.prepareStatement("select * from products where product_name = ?; ");
+            preparedStatement.clearParameters();
+            preparedStatement.setString(1, name);   // => name matched to the first ?
+            ResultSet result = preparedStatement.executeQuery();
+            System.out.println("*****************************************************************************************************************************************");
+            System.out.printf("%10s %60s", "PROD_NAME", "UNIT_PRICE\n");
+            System.out.println("*****************************************************************************************************************************************");
+            while (result.next()) {
+                System.out.format("%2s %70s",
+                        result.getString("product_name"),
+                        result.getString("unit_price")
+                );
+                System.out.println();
+            }
+        } catch (SQLException sqle) {
+            System.err.println("Connection error: " + sqle);
+        }
+    }
 
+
+    public static void searchEmployeeByName(String name) throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+        String dbUrl = "jdbc:postgresql:northwind";
+        try (Connection db = DriverManager.getConnection(dbUrl, "john-erbynn", "turntabl")) {
+            PreparedStatement preparedStatement = db.prepareStatement("select * from employees where first_name = ?; ");
+            preparedStatement.clearParameters();
+            preparedStatement.setString(1, name);   // => name matched to the first ?
+            ResultSet result = preparedStatement.executeQuery();
+
+            System.out.println("*****************************************************************************************************************************************");
+            System.out.printf("%10s %60s", "FIRST_NAME", "CITY\n");
+            System.out.println("*****************************************************************************************************************************************");
+
+            while (result.next()) {
+                System.out.format("%2s %70s",
+                        result.getString("first_name"),
+                        result.getString("city")
+                );
+                System.out.println();
+            }
+        } catch (SQLException sqle) {
+            System.err.println("Connection error: " + sqle);
+        }
+    }
+
+
+//    TODO: consider clean code :)....connection, queries & print
 
 
 }
