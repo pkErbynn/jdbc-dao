@@ -32,7 +32,9 @@ public class ProductDAOImpl implements ProductDAO {
             pst.setString(1, customerName);   // => name matched to the first ?
             ResultSet result = pst.executeQuery();
             while (result.next()) {
-                ProductTO pto = new ProductTO(result.getString("product_name"), result.getDouble("unit_price"));    // the exact col name ....not order_details.unit_price
+                ProductTO pto = new ProductTO(result.getString("product_name"), result.getDouble("unit_price"));
+//                todo: Row map test
+//                ProductTO ptoo = prodRowMapper(result);
                 allProds.add(pto);
             }
         } catch (SQLException sqle) {
@@ -41,6 +43,12 @@ public class ProductDAOImpl implements ProductDAO {
         return allProds;
     }
 
+    private ProductTO prodRowMapper(ResultSet res) throws SQLException {
+        return new ProductTO(
+                res.getString("product_name"),
+                res.getDouble("unit_price")
+        );
+    }
 
     @Override
     public List<ProductTO> displayTop5PopularProducts() throws ClassNotFoundException {
