@@ -3,39 +3,32 @@ package io.turntabl;
 import java.util.Date;
 
 public class SalesTO {
-    private Date orderDate;
     private String customerName;
     private String productName;
     private Double amount;
 
     public SalesTO(Date orderDate, String customerName, String productName, Double amount) {
-        this.orderDate = orderDate;
         this.customerName = customerName;
         this.productName = productName;
         this.amount = amount;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
-    }
-
     public String getCustomerName() {
-        return customerName;
+        return this.customerName;
     }
 
     public String getProductName() {
-        return productName;
+        return this.productName;
     }
 
     public Double getAmount() {
-        return amount;
+        return this.amount;
     }
 
     @Override
     public String toString() {
         return "SalesTO{" +
-                "orderDate=" + orderDate +
-                ", customerName='" + customerName + '\'' +
+                "customerName='" + customerName + '\'' +
                 ", productName='" + productName + '\'' +
                 ", amount=" + amount +
                 '}';

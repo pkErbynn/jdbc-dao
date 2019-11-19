@@ -5,77 +5,67 @@ package io.turntabl;
 * Return result to business layer
 * */
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class ProductDAOImpl implements ProductDAO {
-    private static final String URL = "jdbc:postgresql:northwind";
-    private static final String USERNAME = "john-erbynn";
-    private static final String PASSWORD = "turntabl";
-
 
     @Override
-    public List<ProductTO> showAllProductsByCustomer(String customerName) throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
+    public List<ProductTO> getAllProducts() {
+        ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
+        JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("productDAOTemplate");
 
-        List<ProductTO> allProds = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
-//             String SEARCH_CUSTOMER_NAME_QUERY = "...";
-            PreparedStatement pst = conn.prepareStatement("select product_name, order_details.unit_price from products " +
-                    "inner join order_details on products.product_id = order_details.product_id " +
-                    "inner join orders on order_details.order_id = orders.order_id " +
-                    "inner join customers on orders.customer_id = customers.customer_id where customers.contact_name = ? limit 1"
-            );
-            pst.clearParameters();
-            pst.setString(1, customerName);   // => name matched to the first ?
-            ResultSet result = pst.executeQuery();
-            while (result.next()) {
-                ProductTO pto = new ProductTO(result.getString("product_name"), result.getDouble("unit_price"));
-//                todo: Row map test
-//                ProductTO ptoo = prodRowMapper(result);
-                allProds.add(pto);
-            }
-        } catch (SQLException sqle) {
-            System.err.println("Connection error: " + sqle);
-        }
-        return allProds;
-    }
-
-    private ProductTO prodRowMapper(ResultSet res) throws SQLException {
-        return new ProductTO(
-                res.getString("product_name"),
-                res.getDouble("unit_price")
+        RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
+        List<ProductTO> products = jTemplate.query(      // use query() to query multi objects
+                "select * from products limit 10",
+                rowMapper
         );
+        return products ;
     }
 
     @Override
-    public List<ProductTO> displayTop5PopularProducts() throws ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
-        List<ProductTO> popularProds = new ArrayList<>();
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
-            final String top5ProdQuery ="select products.product_name, products.unit_price, count(products.product_name) as pc " +
-                    "from products inner join order_details " +
-                    "on products.product_id = order_details.product_id " +
-                    "group by products.product_name, products.unit_price " +
-                    "order by pc " +
-                    "desc limit 5";
-            PreparedStatement pst = conn.prepareStatement(top5ProdQuery);
-            pst.clearParameters();
-            ResultSet result = pst.executeQuery();
-            while (result.next()) {
-                ProductTO pto = new ProductTO(result.getString("product_name"), result.getDouble("unit_price"));    // the exact col name ....not order_details.unit_price
-                popularProds.add(pto);
-            }
-        } catch (SQLException sqle) {
-            System.err.println("Connection error: " + sqle);
-        }
+    public List<ProductTO> showAllProductsByCustomer(String customerName) {
+        ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
+        JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("productDAOTemplate");
+
+        RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
+        String CUSTOMER_PROD_QUERY = "select product_name, order_details.unit_price from products \" +\n" +
+                "                        \"inner join order_details on products.product_id = order_details.product_id \" +\n" +
+                "                        \"inner join orders on order_details.order_id = orders.order_id \" +\n" +
+                "                        \"inner join customers on orders.customer_id = customers.customer_id where customers.contact_name = ? limit 5";
+        List<ProductTO> custProds = (List<ProductTO>) jTemplate.query(
+                CUSTOMER_PROD_QUERY,
+                new Object[]{"Thomas Hardy"},
+//                new Object[]("Thomas Hardy"),
+                rowMapper
+        );
+        return custProds;
+    }
+
+
+    @Override
+    public List<ProductTO> displayTop5PopularProducts() {
+        ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
+        JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("productDAOTemplate");
+
+        RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
+        final String top5ProdQuery ="select products.product_name, products.unit_price, count(products.product_name) as pc " +
+                "from products inner join order_details " +
+                "on products.product_id = order_details.product_id " +
+                "group by products.product_name, products.unit_price " +
+                "order by pc " +
+                "desc limit 5";
+        List<ProductTO> popularProds = jTemplate.query(top5ProdQuery,rowMapper);
         return popularProds;
     }
 
-
-
-//    Todo: RowMapper
 
 }
