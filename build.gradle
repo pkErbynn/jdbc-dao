@@ -6,6 +6,7 @@ plugins {
 
 group 'io.turntabl'
 version '1.0-SNAPSHOT'
+mainClassName = 'io.turntabl.Main'
 
 sourceCompatibility = 1.8
 
@@ -17,6 +18,12 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile group: 'org.postgresql', name: 'postgresql', version: '42.2.8'
     compile group: 'com.h2database', name: 'h2', version: '1.3.148'
+
+    compile 'org.springframework:spring-core:5.2.1.RELEASE'
+    compile 'org.springframework:spring-beans:5.2.1.RELEASE'
+    compile 'org.springframework:spring-context:5.2.1.RELEASE'
+    compile 'org.springframework:spring-jdbc:5.2.1.RELEASE'     // include!!
+    runtime 'org.springframework:spring-context:5.2.1.RELEASE'
 }
 
 application {

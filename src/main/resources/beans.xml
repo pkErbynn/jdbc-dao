@@ -1,0 +1,31 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="datasource"/>
+    </bean>
+
+    <bean id="datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.postgresql.Driver"/>
+        <property name="url" value="jdbc:postgresql:northwind"/>
+        <property name="username" value="john-erbynn" />
+        <property name="password" value="turntabl"/>
+    </bean>
+
+
+<!--    <bean id="humanBean" class="io.turntabl.springgettingstarted.HumanBean">-->
+<!--        <property name="FName" value="john" />-->
+<!--        <property name="LName" value="erbynn" />-->
+<!--        <property name="BestFriend" ref="friend"/>-->
+<!--    </bean>-->
+
+<!--    <bean id="friend" class="io.turntabl.springgettingstarted.HumanBean">-->
+<!--        <property name="FName" value="kojo" />-->
+<!--        <property name="LName" value="fosu" />-->
+<!--    </bean>-->
+
+
+</beans>
+
