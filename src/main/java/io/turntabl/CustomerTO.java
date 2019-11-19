@@ -6,10 +6,21 @@ public class CustomerTO {
     private String city;
     private String country;
 
-    public CustomerTO(String companyName, String contactName, String city, String country) {
+    CustomerTO(){}
+
+    public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public void setContactName(String contactName) {
         this.contactName = contactName;
+    }
+
+    public void setCity(String city) {
         this.city = city;
+    }
+
+    public void setCountry(String country) {
         this.country = country;
     }
 

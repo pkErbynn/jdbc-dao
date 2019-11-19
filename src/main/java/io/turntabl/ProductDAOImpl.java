@@ -1,9 +1,9 @@
 package io.turntabl;
 /*
-* Connects to DB
-* Query
-* Return result to business layer
-* */
+ * Connects to DB
+ * Query
+ * Return result to business layer
+ * */
 
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -18,6 +18,12 @@ import java.util.List;
 
 public class ProductDAOImpl implements ProductDAO {
 
+    //    Todo: do spring clean to removing boiler codes
+   /* private JdbcTemplate getJdbcTemplate(String jdbcTemplate) {
+        ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
+        return (JdbcTemplate) appContx.getBean(jdbcTemplate);
+    }*/
+
     @Override
     public List<ProductTO> getAllProducts() {
         ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
@@ -25,7 +31,7 @@ public class ProductDAOImpl implements ProductDAO {
 
         RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
         List<ProductTO> products = jTemplate.query("select * from products limit 10", rowMapper);       // use query() for multi query
-        return products ;
+        return products;
     }
 
     @Override
@@ -38,11 +44,16 @@ public class ProductDAOImpl implements ProductDAO {
                 "                        \"inner join order_details on products.product_id = order_details.product_id \" +\n" +
                 "                        \"inner join orders on order_details.order_id = orders.order_id \" +\n" +
                 "                        \"inner join customers on orders.customer_id = customers.customer_id where customers.contact_name = ? limit 5";
-        List<ProductTO> custProds = (List<ProductTO>) jTemplate.query(
+        /*String CUSTOMER_PROD_QUERY2 = "select product_name, order_details.unit_price from products \" +\n" +
+                "                        \"inner join order_details on products.product_id = order_details.product_id \" +\n" +
+                "                        \"inner join orders on order_details.order_id = orders.order_id \" +\n" +
+                "                        \"inner join customers on orders.customer_id = customers.customer_id where customers.contact_name like '%?%' limit 5";
+        */
+
+        List<ProductTO> custProds = jTemplate.query(
                 CUSTOMER_PROD_QUERY,
 //                new Object[]{"Thomas Hardy"},
                 new Object[]{customerName},
-//                new Object[]("Thomas Hardy"),
                 rowMapper
         );
         return custProds;
@@ -55,13 +66,13 @@ public class ProductDAOImpl implements ProductDAO {
         JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("productDAOTemplate");
 
         RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
-        final String top5ProdQuery ="select products.product_name, products.unit_price, count(products.product_name) as pc " +
+        final String top5ProdQuery = "select products.product_name, products.unit_price, count(products.product_name) as pc " +
                 "from products inner join order_details " +
                 "on products.product_id = order_details.product_id " +
                 "group by products.product_name, products.unit_price " +
                 "order by pc " +
                 "desc limit 5";
-        List<ProductTO> popularProds = jTemplate.query(top5ProdQuery,rowMapper);
+        List<ProductTO> popularProds = jTemplate.query(top5ProdQuery, rowMapper);
         return popularProds;
     }
 

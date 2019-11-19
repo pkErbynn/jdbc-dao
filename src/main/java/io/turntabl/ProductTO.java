@@ -5,8 +5,13 @@ public class ProductTO {
     private Double unitPrice;   // not double
 //    Todo: try include foreign fields wrt inner join
 
-    public ProductTO(String productName, Double unitPrice) {
+    public ProductTO() {}
+
+    public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public void setUnitPrice(Double unitPrice) {
         this.unitPrice = unitPrice;
     }
 
