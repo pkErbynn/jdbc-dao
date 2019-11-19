@@ -24,10 +24,7 @@ public class ProductDAOImpl implements ProductDAO {
         JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("productDAOTemplate");
 
         RowMapper rowMapper = BeanPropertyRowMapper.newInstance(ProductTO.class);
-        List<ProductTO> products = jTemplate.query(      // use query() to query multi objects
-                "select * from products limit 10",
-                rowMapper
-        );
+        List<ProductTO> products = jTemplate.query("select * from products limit 10", rowMapper);       // use query() for multi query
         return products ;
     }
 
@@ -43,7 +40,8 @@ public class ProductDAOImpl implements ProductDAO {
                 "                        \"inner join customers on orders.customer_id = customers.customer_id where customers.contact_name = ? limit 5";
         List<ProductTO> custProds = (List<ProductTO>) jTemplate.query(
                 CUSTOMER_PROD_QUERY,
-                new Object[]{"Thomas Hardy"},
+//                new Object[]{"Thomas Hardy"},
+                new Object[]{customerName},
 //                new Object[]("Thomas Hardy"),
                 rowMapper
         );
