@@ -7,6 +7,7 @@ public class SalesTO {
     private String productName;
     private Double amount;
 
+    // todo: change to setters if no job
     public SalesTO(Date orderDate, String customerName, String productName, Double amount) {
         this.customerName = customerName;
         this.productName = productName;

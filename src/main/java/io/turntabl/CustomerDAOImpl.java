@@ -45,8 +45,10 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public int numberOfCustomers() {
-
-        return 0;
+        ApplicationContext appContx = new ClassPathXmlApplicationContext("beans");
+        JdbcTemplate jTemplate = (JdbcTemplate) appContx.getBean("customerDAOTemplate");
+        int count = jTemplate.queryForObject("select count(distinct contact_name) from customers;", Integer.class);
+        return count;
     }
 
 
