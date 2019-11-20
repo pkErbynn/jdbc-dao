@@ -3,6 +3,7 @@ package io.turntabl;
 public class ProductTO {
     private String productName;
     private Double unitPrice;   // not double
+
 //    Todo: try include foreign fields wrt inner join
 
     public ProductTO() {}
