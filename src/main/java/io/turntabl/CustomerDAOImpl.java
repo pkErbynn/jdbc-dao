@@ -6,7 +6,11 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
+
+
 
 public class CustomerDAOImpl implements CustomerDAO {
 
@@ -40,6 +44,25 @@ public class CustomerDAOImpl implements CustomerDAO {
                 "select * from customers where contact_name = ?",
                 new Object[]{"John Steal"},
                 rowMapper);     // since not selecting only one field but all, RowMapper needed
+
+
+        /*
+        // for custom row mapper
+        CustomerTO cust = (CustomerTO) jTemplate.queryForObject(
+                "select * from customers where contact_name = ?",
+                new Object[]{"John Steal"},
+                new RowMapper<CustomerTO>() {
+                    @Override
+                    public CustomerTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+//                        return new CustomerTO(rs.getString("contact_name"), rs.getString("country"), rs.getString("region")); // for arg-constructor
+                        CustomerTO customer = new CustomerTO();
+                        customer.setContactName(rs.getString("contact_name"));
+                        customer.setCountry(rs.getString("country"));
+                        return customer;
+                        }
+                });
+         */
+        
         return customer;
     }
 
@@ -53,3 +76,24 @@ public class CustomerDAOImpl implements CustomerDAO {
 
 
 }
+
+
+
+
+/*
+// in case use custom customerTOmapper in multiple places
+// create `new CreateTOMapper()` for usage
+// can be marked `public` for access in diff class/package
+
+class CustomerTOMapper implements RowMapper<CustomerTO> {
+    @Override
+    public CustomerTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+//      return new CustomerTO(rs.getString("contact_name"), rs.getString("country"), rs.getString("region")); // for arg-constructor
+        CustomerTO customer = new CustomerTO();
+        customer.setContactName(rs.getString("contact_name"));
+        customer.setCountry(rs.getString("country"));
+        return customer;
+    }
+}
+
+*/
