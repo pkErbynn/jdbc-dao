@@ -8,9 +8,23 @@ public class SalesTO {
     private Double amount;
 
     // todo: change to setters if no job
-    public SalesTO(Date orderDate, String customerName, String productName, Double amount) {
+//    public SalesTO(Date orderDate, String customerName, String productName, Double amount) {
+//        this.customerName = customerName;
+//        this.productName = productName;
+//        this.amount = amount;
+//    }
+
+    SalesTO(){}
+
+    public void setCustomerName(String customerName) {
         this.customerName = customerName;
+    }
+
+    public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
